@@ -1,0 +1,25 @@
+version: '3'
+
+volumes: 
+  pgdata:
+
+services:
+  db:
+    image: postgres
+    volumes:
+      - pgdata:/pgdata
+    environment:
+      - POSTGRES_PASSWORD=mypass
+      - POSTGRES_USER=rails
+      - PGDATA=/pgdata
+
+  redis:
+    image: redis
+
+  web:
+    build: .
+    command: bin/rails server
+    depends_on: [db, redis]
+    ports: ["3000:3000"]
+    volumes: 
+      - $PWD:/app
